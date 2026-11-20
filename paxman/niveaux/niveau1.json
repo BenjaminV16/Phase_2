@@ -1,0 +1,140 @@
+{
+    "plateau": [
+        "┌────────────┐┌────────────┐",
+        "│............││............│",
+        "│.┌──┐.┌───┐.││.┌───┐.┌──┐.│",
+        "│o│  │.│   │.││.│   │.│  │o│",
+        "│.└──┘.└───┘.└┘.└───┘.└──┘.│",
+        "│..........................│",
+        "│.┌──┐.┌┐.┌──────┐.┌┐.┌──┐.│",
+        "│.└──┘.││.└──┐┌──┘.││.└──┘.│",
+        "│......││....││....││......│",
+        "└────┐.│└──┐ ││ ┌──┘│.┌────┘",
+        "     │.│┌──┘ └┘ └──┐│.│     ",
+        "     │.││          ││.│     ",
+        "     │.││ ┌──__──┐ ││.│     ",
+        "─────┘.└┘ │      │ └┘.└─────",
+        "      .   │      │   .      ",
+        "─────┐.┌┐ │      │ ┌┐.┌─────",
+        "     │.││ └──────┘ ││.│     ",
+        "     │.││          ││.│     ",
+        "     │.││ ┌──────┐ ││.│     ",
+        "┌────┘.└┘ └──┐┌──┘ └┘.└────┐",
+        "│............││............│",
+        "│.┌──┐.┌───┐.││.┌───┐.┌──┐.│",
+        "│.└─┐│.└───┘.└┘.└───┘.│┌─┘.│",
+        "│o..││.......  .......││..o│",
+        "└─┐.││.┌┐.┌──────┐.┌┐.││.┌─┘",
+        "┌─┘.└┘.││.└──┐┌──┘.││.└┘.└─┐",
+        "│......││....││....││......│",
+        "│.┌────┘└──┐.││.┌──┘└────┐.│",
+        "│.└────────┘.└┘.└────────┘.│",
+        "│..........................│",
+        "└──────────────────────────┘"
+    ],
+    "paxman": {
+        "mode": "manuel",
+        "vies": 3,
+        "position-initiale": [
+            14.5,
+            8
+        ],
+        "rayon-réaction": 6.0,
+        "vitesse-défaut": 4.5,
+        "vitesse-force": 5.0,
+        "accélération-max": 1.4,
+        "accélération-montée": 1.5,
+        "accélération-descente": 2.5,
+        "jauge-vidange": 0.5,
+        "jauge-recharge": 0.2
+    },
+    "fantômes": [
+        {
+            "nom": "Blinky",
+            "position-initiale": [
+                14.5,
+                20
+            ],
+            "cible-dispersion": [
+                29,
+                32
+            ],
+            "vitesse-défaut": 4.1,
+            "vitesse-fuite": 4.0,
+            "vitesse-revenant": 10.0,
+            "délai-départ": 2,
+            "afficher-cible": false
+        },
+        {
+            "nom": "Pinky",
+            "position-initiale": [
+                12,
+                18
+            ],
+            "cible-dispersion": [
+                1,
+                32
+            ],
+            "vitesse-défaut": 4.1,
+            "vitesse-fuite": 4.0,
+            "vitesse-revenant": 10.0,
+            "délai-départ": 3,
+            "afficher-cible": false
+        },
+        {
+            "nom": "Inky",
+            "position-initiale": [
+                12,
+                16
+            ],
+            "cible-dispersion": [
+                1,
+                1
+            ],
+            "vitesse-défaut": 4.1,
+            "vitesse-fuite": 4.0,
+            "vitesse-revenant": 10.0,
+            "délai-départ": 4,
+            "afficher-cible": false
+        },
+        {
+            "nom": "Clyde",
+            "position-initiale": [
+                17,
+                16
+            ],
+            "cible-dispersion": [
+                29,
+                1
+            ],
+            "vitesse-défaut": 4.1,
+            "vitesse-fuite": 4.0,
+            "vitesse-revenant": 10.0,
+            "délai-départ": 7,
+            "afficher-cible": false
+        }
+    ],
+    "réglages": {
+        "tuile-dimension": 35,
+        "mur-épaisseur": 0.2,
+        "porte-délai-ouverture": 5,
+        "dispersion-durée": 7,
+        "poursuite-durée": 20,
+        "fuite-durée": 12,
+        "cible-cage": [
+            14.5,
+            19
+        ],
+        "emplacement-cage": [
+            [
+                11,
+                15
+            ],
+            [
+                18,
+                19
+            ]
+        ],
+        "afficher-cage": false
+    }
+}
