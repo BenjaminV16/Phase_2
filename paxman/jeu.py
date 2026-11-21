@@ -228,7 +228,7 @@ class JeuPaxman:
         if est_une_pilule_de_force:
             self.appliquer_la_pilule_force()
 
-    def appliquer_la_pilule_force(self):
+    def appliquer_la_pilule_force(self) -> None:
         self.fenetre.annuler_appel_fonction(self.terminer_effet_pilule_force)
         self.fenetre.annuler_appel_fonction(self.signaler_fin_vulnerabilite)
         self.fenetre.annuler_appel_fonction(self.alterner_dispersion_poursuite)
@@ -237,17 +237,17 @@ class JeuPaxman:
         self.paxman.vitesse = self.paxman.reglage("vitesse-force")
 
         #Faire passer tous les fantômes en mode fuite
-        for fantome in self.fantomes:
-        fantome.fuir()
+        for fantome in self.fantomes.values():
+            fantome.mode = "fuite"
 
         self.combo = 200
 
-        duree = self.reglage("fuite-durée")
+        duree = self._reglages["fuite-durée"]
         #effet visuel  
         self.fenetre.programmer_appel_fonction(
             self.signaler_fin_vulnerabilite, 0.8 * duree
         )
-        #Retour normale
+        #Retour normal
         self.fenetre.programmer_appel_fonction(
            self.terminer_effet_pilule_force, duree
         )
