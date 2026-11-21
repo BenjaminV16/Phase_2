@@ -253,41 +253,41 @@ class JeuPaxman:
         )
 
     def traiter_la_collision(self, fantome: Fantome) -> bool:
-        """Réagit à une collision entre Paxman et un fantôme.
+        """Traite la collision entre Paxman et un fantôme."""
 
-        Retourne True si la trame doit s'arrêter là.
+        if fantome.mode == "fuite":
+            self.paxman.score += self.combo
+            self.combo *= 2
+            fantome.mode = "revenant"
+            self._sons["mange-fantôme"].jouer()
+            return False
 
-        En phase 1, toute collision est fatale.
+        if fantome.mode == "revenant":
+            return False
 
-        TODO (phase 2, étape 2) : si le fantôme est en mode "fuite", Paxman le
-        dévore — ajoutez `self.combo` points au score, doublez le combo, placez
-        le fantôme en mode "revenant", jouez "mange-fantôme", et retournez False
-        pour continuer la trame avec le fantôme suivant. Un fantôme déjà en mode 
-        "revenant" est inoffensif : retournez aussi  False, sans rien faire 
-        (il touche souvent encore Paxman à la trame qui suit)
-        """
-
-        # pylint: disable=unused-argument
         return self.perdre_une_vie()
+
 
     def perdre_une_vie(self) -> bool:
         """Retire une vie à Paxman et relance la partie, ou y met fin.
 
         Retourne True si la trame doit s'arrêter là.
-
-        TODO (phase 2, étape 3) : à implanter. Pour l'instant, la première
-        collision met fin à la partie, comme en phase 1.
-
-        Ce que vous devez faire :
-          1. décrémenter paxman.vies (attribut que vous devez ajouter à Paxman) ;
-          2. arrêter les sons en cours, puis jouer "paxman-requiem" ;
-          3. s'il ne reste plus de vie : sauvegarder le score et lever
-             StopIteration("Partie perdue") ;
-          4. sinon : appeler replacer_les_acteurs(), afficher READY! dans
-             l'entête, appeler mettre_en_pause(2) et retourner True.
         """
+        self.paxman.vies -= 1
 
-        raise StopIteration("Partie perdue")
+        for son in self._sons.values():
+            son.arreter()
+        self._sons["paxman-requiem"].jouer()
+
+        if self.paxman.vies <= 0:
+            self.sauvegarder_le_score()
+            raise StopIteration("Partie perdue")
+
+        self.replacer_les_acteurs()
+        self.fenetre.entete = "READY!"
+        self.mettre_en_pause(2)
+        return True
+
 
     def sauvegarder_score(self) -> None:
         """Ajoute le score actuel de Paxman à la fin du fichier `scores.txt`.

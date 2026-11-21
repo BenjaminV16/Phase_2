@@ -23,8 +23,7 @@ class Paxman(Acteur):
         # initialiser sa vitesse
         self.vitesse = self.reglage("vitesse-défaut")
 
-        # TODO (phase 2, étape 3) : initialiser ici le nombre de vies de Paxman,
-        # à partir du réglage "vies" du niveau.
+        self.vies = self.reglage("vies")
 
         # initialiser son score
         self.score = 0
