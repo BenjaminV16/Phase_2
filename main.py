@@ -6,8 +6,13 @@ from ast import arguments
 FICHIER_SCORES = "scores.txt"
 
 
-def lister_les_scores(fichier: str = FICHIER_SCORES, nombre: int = 10) -> None:
+def lister_les_scores(
+    fichier: str | None = None, nombre: int = 10
+) -> None:
     """Affiche les meilleurs scores, du plus grand au plus petit."""
+    if fichier is None:
+        fichier = FICHIER_SCORES
+
     try:
         with open(fichier, encoding="utf-8") as f:
             lignes = [ligne.strip() for ligne in f if ligne.strip()]
@@ -15,8 +20,11 @@ def lister_les_scores(fichier: str = FICHIER_SCORES, nombre: int = 10) -> None:
         print("Aucun score enregistré.")
         return
 
-    lignes = sorted(lignes, key=lambda ligne: int(ligne.split()[1]), reverse=True)
+    lignes = sorted(
+        lignes, key=lambda ligne: int(ligne.split()[1]), reverse=True
+    )
 
+    print(f"Meilleurs scores ({min(nombre, len(lignes))}) :")
     for ligne in lignes[:nombre]:
         print(ligne)
 
