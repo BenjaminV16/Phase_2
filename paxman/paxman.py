@@ -30,7 +30,8 @@ class Paxman(Acteur):
 
         # TODO (phase 2, étape 8) : initialiser ici la jauge d'accélération
         # de Paxman, un nombre réel entre 0 (vide) et 1 (pleine), à 1.
-
+        self.jauge = 1.0
+        
     @property
     def score(self) -> int:
         """Retourne le score actuel de Paxman."""

@@ -7,6 +7,7 @@ import pathlib
 
 import pyglet
 
+from datetime import datetime
 from .fantome import Fantome
 from .fenetre_pyglet import Fenetre
 from .obstacles import Porte
@@ -192,17 +193,16 @@ class JeuPaxman:
                 if self.traiter_la_collision(fantome):
                     return
 
-        # TODO (phase 2, étape 4) : la victoire.
-        #   S'il ne reste plus aucune récompense sur le plateau, arrêtez tous les
-        #   sons, sauvegardez le score et terminez la partie avec
-        #   StopIteration("Partie gagnée").
-        #   Votre méthode Plateau.partie_gagnee() répond exactement à cette
-        #   question.
+        if self.plateau.partie_gagnee():
+            for son in self._sons.values():
+                son.arreter()
+            self.sauvegarder_score()
+            raise StopIteration("Partie gagnée")
 
-        # 6. l'affichage du score
-        # TODO (phase 2, étapes 3 et 8) : afficher aussi le nombre de vies
-        # restantes et l'état de la jauge d'accélération
-        self.fenetre.score.text = f"Score: {self.paxman.score}"
+        # 6. l'affichage du score, des vies et de la jauge
+        self.fenetre.score.text = (
+            f"Score: {self.paxman.score}   Vies: {self.paxman.vies}"
+        )
 
     def ramasser_la_recompense(self) -> None:
         """Ramasse la récompense sous Paxman, s'il y en a une (phase 1)."""
@@ -223,7 +223,13 @@ class JeuPaxman:
         self.paxman.score += self.plateau.ramasser(tuile)
         self.fenetre.dessiner_recompenses(self.plateau)
 
-        # TODO (phase 2, étape 5) : jouer le son "mange-pilule"
+        self.paxman.score += self.plateau.ramasser(tuile)
+        self.fenetre.dessiner_recompenses(self.plateau)
+
+        self._sons["mange-pilule"].jouer()
+
+        if est_une_pilule_de_force:
+            self.appliquer_la_pilule_force()
 
         if est_une_pilule_de_force:
             self.appliquer_la_pilule_force()
@@ -280,25 +286,20 @@ class JeuPaxman:
         self._sons["paxman-requiem"].jouer()
 
         if self.paxman.vies <= 0:
-            self.sauvegarder_le_score()
+            self.sauvegarder_score()
             raise StopIteration("Partie perdue")
 
         self.replacer_les_acteurs()
-        self.fenetre.entete = "READY!"
+        self.fenetre.score.text = "READY!"
         self.mettre_en_pause(2)
         return True
 
 
     def sauvegarder_score(self) -> None:
-        """Ajoute le score actuel de Paxman à la fin du fichier `scores.txt`.
-
-        TODO (phase 2, étape 6) : à implanter. Le fichier est créé s'il n'existe
-        pas, et chaque appel y ajoute une ligne au format :
-
-            2026-03-20T16:42:10 1850
-
-        Pour la date, `datetime.now().isoformat(timespec="seconds")`.
-        """
+        """Ajoute le score actuel de Paxman à la fin du fichier `scores.txt`."""
+        horodatage = datetime.now().isoformat(timespec="seconds")
+        with open("scores.txt", "a", encoding="utf-8") as fichier:
+            fichier.write(f"{horodatage} {self.paxman.score}\n")
 
     @property
     def en_pause(self) -> bool:
@@ -338,17 +339,13 @@ class JeuPaxman:
             self.fenetre.dessiner_fantome(fantome)
 
     def ajuster_acceleration(self, delta_t: float) -> None:
-        """Rapproche le facteur de vitesse de Paxman de sa cible (phase 1).
-
-        Écrite en phase 1 : la barre d'espace accélère progressivement Paxman
-        jusqu'à `accélération-max`, et le relâchement le ralentit tout aussi
-        progressivement.
-        """
-
-        # TODO (phase 2, étape 8) : n'accélérer que si la jauge le permet.
-        #   Remplacez self.accelerateur, ci-dessous, par la valeur que retourne
-        #   self.paxman.mettre_a_jour_la_jauge(self.accelerateur, delta_t).
-        cible = self.paxman.reglage("accélération-max") if self.accelerateur else 1.0
+        """Rapproche le facteur de vitesse de Paxman de sa cible (phase 1)."""
+        peut_accelerer = self.paxman.mettre_a_jour_la_jauge(
+            self.accelerateur, delta_t
+        )
+        cible = (
+            self.paxman.reglage("accélération-max") if peut_accelerer else 1.0
+        )
 
         if self.paxman.facteur < cible:
             pas = self.paxman.reglage("accélération-montée") * delta_t
