@@ -1,13 +1,12 @@
 """Ce module contient la définition de la classe qui encapsule toutes les composantes
 du jeu de Paxman.
 """
-
+from datetime import datetime
 import json
 import pathlib
 
 import pyglet
 
-from datetime import datetime
 from .fantome import Fantome
 from .fenetre_pyglet import Fenetre
 from .obstacles import Porte
@@ -15,7 +14,7 @@ from .paxman import Paxman
 from .plateau import Plateau
 from .recompenses import PiluleForce
 from .son_pyglet import charger_les_sons
-from paxman import fantome
+
 
 # TODO (phase 2, étapes 3 et 6) : importer aussi `arreter_tous` du module
 # son_pyglet, et la classe `datetime` du module datetime.
@@ -201,7 +200,9 @@ class JeuPaxman:
 
         # 6. l'affichage du score, des vies et de la jauge
         self.fenetre.score.text = (
-            f"Score: {self.paxman.score}   Vies: {self.paxman.vies}"
+            f"Score: {self.paxman.score}   "
+            f"Vies: {self.paxman.vies}   "
+            f"Jauge: {int(self.paxman.jauge * 100)}%"
         )
 
     def ramasser_la_recompense(self) -> None:
@@ -247,6 +248,10 @@ class JeuPaxman:
             fantome.mode = "fuite"
 
         self.combo = 200
+
+        # Couper la sirène et lancer la musique de fuite
+        self._sons["sirène"].arreter()
+        self._sons["fantômes-enfuite"].jouer()
 
         duree = self._reglages["fuite-durée"]
         #effet visuel  

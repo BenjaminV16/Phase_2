@@ -6,14 +6,18 @@ FICHIER_SCORES = "scores.txt"
 
 
 def lister_les_scores(fichier: str = FICHIER_SCORES, nombre: int = 10) -> None:
-    """Affiche les meilleurs scores, du plus grand au plus petit.
+    """Affiche les meilleurs scores, du plus grand au plus petit."""
+    try:
+        with open(fichier, encoding="utf-8") as f:
+            lignes = [ligne.strip() for ligne in f if ligne.strip()]
+    except FileNotFoundError:
+        print("Aucun score enregistré.")
+        return
 
-    TODO (phase 2, étape 7) : à implanter. Lisez le fichier, triez les scores
-    en ordre décroissant et affichez les `nombre` premiers. Si le fichier
-    n'existe pas, affichez un message au lieu de planter.
-    """
+    lignes.sort(key=lambda ligne: int(ligne.split()[1]), reverse=True)
 
-    raise NotImplementedError
+    for ligne in lignes[:nombre]:
+        print(ligne)
 
 
 def analyser_ligne_commande() -> argparse.Namespace:
@@ -36,10 +40,19 @@ def analyser_ligne_commande() -> argparse.Namespace:
         help="affiche le jeu sans l'animer et montre l'état de la manette",
     )
 
-    # TODO (phase 2, étape 7) : ajouter les deux options suivantes
-    #   --sourdine        désactive tous les sons du jeu
-    #   --lister-scores   affiche les 10 meilleurs scores, puis quitte
-    # (la phase 3 ajoutera ici l'option -a / --auto)
+    analyseur.add_argument(
+        "-s",
+        "--sourdine",
+        action="store_true",
+        help="désactive tous les sons du jeu",
+    )
+
+    analyseur.add_argument(
+        "-l",
+        "--lister-scores",
+        action="store_true",
+        help="affiche les 10 meilleurs scores, puis quitte",
+    )
 
     return analyseur.parse_args()
 

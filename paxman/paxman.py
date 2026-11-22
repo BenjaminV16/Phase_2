@@ -31,7 +31,7 @@ class Paxman(Acteur):
         # TODO (phase 2, étape 8) : initialiser ici la jauge d'accélération
         # de Paxman, un nombre réel entre 0 (vide) et 1 (pleine), à 1.
         self.jauge = 1.0
-        
+
     @property
     def score(self) -> int:
         """Retourne le score actuel de Paxman."""
@@ -53,17 +53,17 @@ class Paxman(Acteur):
         self._score = valeur
 
     def mettre_a_jour_la_jauge(self, accelere: bool, delta_t: float) -> bool:
-        """Vide ou remplit la jauge d'accélération pendant une trame.
+        """Vide ou remplit la jauge d'accélération pendant une trame."""
+        if not accelere:
+            self.jauge = min(1.0, self.jauge + self.reglage("jauge-recharge") * delta_t)
+            return False
 
-        TODO (phase 2, étape 8) : à implanter.
-          - si `accelere` est faux, la jauge se remplit de
-            `jauge-recharge × delta_t`, sans dépasser 1, et la méthode
-            retourne False ;
-          - si `accelere` est vrai et que la jauge est vide, elle reste vide
-            et la méthode retourne False ;
-          - sinon, la jauge se vide de `jauge-vidange × delta_t`, sans
-            descendre sous 0, et la méthode retourne True.
-        """
+        if self.jauge <= 0:
+            self.jauge = 0.0
+            return False
+
+        self.jauge = max(0.0, self.jauge - self.reglage("jauge-vidange") * delta_t)
+        return True
 
         raise NotImplementedError
 
