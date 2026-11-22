@@ -1,6 +1,7 @@
 """Ce module contient le code principal du jeu Paxman."""
 
 import argparse
+from ast import arguments
 
 FICHIER_SCORES = "scores.txt"
 
@@ -14,7 +15,7 @@ def lister_les_scores(fichier: str = FICHIER_SCORES, nombre: int = 10) -> None:
         print("Aucun score enregistré.")
         return
 
-    lignes.sort(key=lambda ligne: int(ligne.split()[1]), reverse=True)
+    lignes = sorted(lignes, key=lambda ligne: int(ligne.split()[1]), reverse=True)
 
     for ligne in lignes[:nombre]:
         print(ligne)
@@ -61,6 +62,10 @@ if __name__ == "__main__":
     # analyser la ligne de commande
     arguments = analyser_ligne_commande()
 
+    if arguments.lister_scores:
+        lister_les_scores()
+        raise SystemExit
+
     # Le jeu n'est importé qu'ici, et non en haut du fichier : importer
     # `paxman.jeu` entraîne l'ouverture de l'environnement graphique, ce qui
     # serait inutile — et parfois impossible, par exemple en ligne de commande
@@ -71,6 +76,7 @@ if __name__ == "__main__":
     jeu = JeuPaxman(
         niveau=arguments.niveau,
         diagnostic=arguments.diagnostic,
+        sourdine=arguments.sourdine,
     )
 
     # démarrer la boucle événementielle du jeu
